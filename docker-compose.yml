@@ -13,7 +13,7 @@ services:
     networks:
       - dms_network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-dms_user}"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-dms_user} -d ${POSTGRES_DB:-dms_db}"]
       interval: 10s
       timeout: 5s
       retries: 5

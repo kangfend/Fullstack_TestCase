@@ -16,6 +16,8 @@ class Settings(BaseSettings):
     MINIO_BUCKET: str = "dms-documents"
     MINIO_SECURE: bool = False
 
+    MAX_FILE_SIZE: int = 100 * 1024 * 1024  # 100MB
+
     model_config = SettingsConfigDict(env_file=".env", case_sensitive=True)
 
 

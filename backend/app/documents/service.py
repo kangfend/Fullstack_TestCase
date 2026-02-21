@@ -8,6 +8,7 @@ from .repository import DocumentRepository
 from .models import DocumentStatus, RequestType, RequestStatus
 from .schemas import DocumentCreate, DocumentUpdate, DocumentListResponse
 from app.notifications.service import NotificationService
+from app.core.config import settings
 from app.core.storage import StorageClient, generate_unique_filename
 
 
@@ -33,6 +34,12 @@ def validate_document_file(file: UploadFile):
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=f"File type not allowed. Allowed types: {', '.join(sorted(ALLOWED_EXTENSIONS))}"
+        )
+
+    if file.size > settings.MAX_FILE_SIZE:
+        raise HTTPException(
+            status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
+            detail=f"File too large. Maximum allowed size is {settings.MAX_FILE_SIZE / (1024 * 1024)} MB"
         )
 
 

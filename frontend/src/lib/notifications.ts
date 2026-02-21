@@ -17,5 +17,5 @@ export async function markAsRead(notificationId: number): Promise<void> {
 }
 
 export async function markAllAsRead(): Promise<void> {
-  await api.patch('/notifications/read-all')
+  await api.post('/notifications/mark-all-read')
 }

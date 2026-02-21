@@ -157,7 +157,7 @@ class DocumentService:
                 detail="Not authorized to update this document"
             )
         
-        # Check if document is locked
+        # Check if document is pending approval
         if document.status in [DocumentStatus.PENDING_DELETE, DocumentStatus.PENDING_REPLACE]:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,

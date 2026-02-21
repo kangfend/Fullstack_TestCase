@@ -1,33 +1,19 @@
 from fastapi import APIRouter, Depends, status, UploadFile, File, Query, Form
-from sqlalchemy.orm import Session
 from typing import Optional
 
-from app.core.database import get_db
-from app.core.storage.minio import get_storage_client
-from app.core.storage import StorageClient
+
 from app.auth.dependencies import get_current_user, require_admin
 from app.auth.models import User, UserRole
+from .dependencies import get_document_service
 from .service import DocumentService
-from .repository import DocumentRepository
 from .schemas import (
     DocumentCreate, DocumentUpdate, DocumentResponse, DocumentListResponse,
     PermissionRequestResponse, PermissionRequestListResponse
 )
-from app.notifications.service import NotificationService
-from app.notifications.repository import NotificationRepository
+
 
 
 router = APIRouter()
-
-
-def get_document_service(
-    db: Session = Depends(get_db),
-    storage_client: StorageClient = Depends(get_storage_client)
-) -> DocumentService:
-    doc_repository = DocumentRepository(db)
-    notif_repository = NotificationRepository(db)
-    notif_service = NotificationService(notif_repository)
-    return DocumentService(doc_repository, storage_client, notif_service)
 
 
 @router.post("/upload", response_model=DocumentResponse, status_code=status.HTTP_201_CREATED)

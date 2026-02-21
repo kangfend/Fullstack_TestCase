@@ -1,21 +1,13 @@
-from fastapi import APIRouter, Depends, status
-from sqlalchemy.orm import Session
+from fastapi import APIRouter, Depends, HTTPException, status
 
-from app.core.database import get_db
 from app.auth.dependencies import get_current_user
 from app.auth.models import User
+from .dependencies import get_notification_service
 from .service import NotificationService
-from .repository import NotificationRepository
 from .schemas import NotificationListResponse, NotificationResponse
 
 
 router = APIRouter()
-
-
-def get_notification_service(db: Session = Depends(get_db)) -> NotificationService:
-    repository = NotificationRepository(db)
-    return NotificationService(repository)
-
 
 @router.get("/", response_model=NotificationListResponse)
 def get_notifications(
@@ -43,7 +35,6 @@ def mark_notification_as_read(
     """Mark a notification as read"""
     notification = service.mark_as_read(notification_id, current_user.id)
     if not notification:
-        from fastapi import HTTPException
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Notification not found"

@@ -160,7 +160,7 @@ export default function DocumentDetailPage() {
             </div>
             <div className="col-span-2">
               <p className="text-sm text-gray-500">Last Updated</p>
-              <p className="font-medium">{formatDate(document.updated_at)}</p>
+              <p className="font-medium">{document.updated_at ? formatDate(document.updated_at) : formatDate(document.created_at)}</p>
             </div>
           </div>
 
